@@ -1,9 +1,9 @@
 -module(my_db).
 -import(db, [new/0, destroy/1, write/3, delete/2, read/2, match/2]).
--export([start/0, loop/1, stop/0, write/2, read/1, delete/1, match/1]).
+-export([start/0, loop/1, stop/0, write/2, read/1, delete/1, match/1, init/0]).
 
 start()->
-    Pid = spawn(my_db,loop,[db:new()]),
+    Pid = spawn(my_db,init,[]),
     register(dbServer, Pid).
 
 stop()->
@@ -31,6 +31,10 @@ match(Element)->
         {reply, Match} ->
             Match
     end.
+
+init()->
+    loop(db:new()).
+
 
 loop(DbRef)->
     receive
